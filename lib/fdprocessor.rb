@@ -3,9 +3,9 @@
 
 module FDProcessor
   VERSION = '1.0.0'
-  
+
   # File and directory processor, with filtering.
-  class Filter
+  class FilterSet
     def initialize args
       @dirsonly = args[:dirsonly]
       @filesonly = args[:filesonly]
