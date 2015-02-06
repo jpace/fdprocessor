@@ -25,6 +25,10 @@ module FDProcessor
       assert_basename_filter false, 'foo', '/tmp/foobar.txt'
     end
 
+    def test_basenamefilter_nomatch_end_basename
+      assert_basename_filter false, 'foo', '/tmp/barfoo.txt'
+    end
+
     def test_basenamefilter_match_regexp
       assert_basename_filter true, %r{foo}, '/tmp/foo.txt'
     end
