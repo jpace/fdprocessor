@@ -6,39 +6,84 @@ require 'fdprocessor/filter'
 require 'pathname'
 
 module FDProcessor
-  class TestCase < Test::Unit::TestCase
-    def assert_basename_filter expect_match, pattern, filename
-      bnf = BaseNameFilter.new pattern
+  module FilterTest
+    def assert_filter_match expect_match, filtercls, pattern, filename
+      bnf = filtercls.new pattern
       pn = Pathname.new filename
-      assert_equal expect_match, !bnf.match?(pn).nil?, "expect_match: #{expect_match}; pattern: #{pattern}; filename: #{filename}"
+      msg = "expect_match: #{expect_match}; filtercls: #{filtercls}; pattern: #{pattern}; filename: #{filename}"
+      assert_equal expect_match, !bnf.match?(pn).nil?, msg
+    end
+  end
+
+  class BaseNameFilterTestCase < Test::Unit::TestCase
+    include FilterTest
+    
+    def assert_match expect_match, pattern, filename
+      assert_filter_match expect_match, BaseNameFilter, pattern, filename
     end
 
-    def test_basenamefilter_match
-      assert_basename_filter true, 'foo', '/tmp/foo.txt'
+    def test_match
+      assert_match true, 'foo', '/tmp/foo.txt'
     end
 
-    def test_basenamefilter_nomatch_full_basename
-      assert_basename_filter false, 'foo', '/tmp/bar.txt'
+    def test_nomatch_full
+      assert_match false, 'foo', '/tmp/bar.txt'
     end
 
-    def test_basenamefilter_nomatch_start_basename
-      assert_basename_filter false, 'foo', '/tmp/foobar.txt'
+    def test_nomatch_start
+      assert_match false, 'foo', '/tmp/foobar.txt'
     end
 
-    def test_basenamefilter_nomatch_end_basename
-      assert_basename_filter false, 'foo', '/tmp/barfoo.txt'
+    def test_nomatch_end
+      assert_match false, 'foo', '/tmp/barfoo.txt'
     end
 
-    def test_basenamefilter_match_regexp
-      assert_basename_filter true, %r{foo}, '/tmp/foo.txt'
+    def test_match_regexp
+      assert_match true, %r{foo}, '/tmp/foo.txt'
     end
 
-    def test_basenamefilter_match_regexp_start
-      assert_basename_filter true, %r{foo}, '/tmp/foobar.txt'
+    def test_match_regexp_start
+      assert_match true, %r{foo}, '/tmp/foobar.txt'
     end
 
-    def test_basenamefilter_nomatch_regexp
-      assert_basename_filter false, %r{foo}, '/tmp/bar.txt'
+    def test_nomatch_regexp
+      assert_match false, %r{foo}, '/tmp/bar.txt'
+    end
+  end
+
+  class ExtFilterTestCase < Test::Unit::TestCase
+    include FilterTest
+
+    def assert_match expect_match, pattern, filename
+      assert_filter_match expect_match, ExtFilter, pattern, filename
+    end
+
+    def test_match
+      assert_match true, 'txt', '/tmp/foo.txt'
+    end
+
+    def test_nomatch_full
+      assert_match false, 'txt', '/tmp/foo.lst'
+    end
+
+    def test_nomatch_start
+      assert_match false, 'foo', '/tmp/foo.2txt'
+    end
+
+    def test_nomatch_end
+      assert_match false, 'foo', '/tmp/foo.txt2'
+    end
+
+    def test_match_regexp
+      assert_match true, %r{te?xt}, '/tmp/foo.txt'
+    end
+
+    def test_match_regexp_start
+      assert_match true, %r{te?xt}, '/tmp/foo.txt2'
+    end
+
+    def test_nomatch_regexp
+      assert_match false, %r{te?xt}, '/tmp/bar.lst'
     end
   end
 end
