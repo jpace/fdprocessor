@@ -12,12 +12,17 @@ module FDProcessor
   # match 'foo.txt', but not 'foobar.txt'.
   class PatternFilter < Filter
     def initialize pattern
-      @pattern = pattern.kind_of?(Regexp) ? pattern : Regexp.new('\b' + pattern + '\b')
+      @pattern = pattern
     end
     
     def match? fd
       elmt = match_element fd
-      elmt.to_s.index @pattern
+      elmtstr = elmt.to_s
+      if @pattern.kind_of?(Regexp)
+        elmtstr.index @pattern
+      else
+        elmtstr == @pattern
+      end
     end
     
     def match_element fd

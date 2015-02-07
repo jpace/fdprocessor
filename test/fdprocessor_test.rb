@@ -3,12 +3,11 @@
 
 require 'test/unit'
 require 'fdprocessor'
+require 'fdprocessor/filter'
 require 'pathname'
 
 module FDProcessor
   class FDProcessorTestCase < Test::Unit::TestCase
-    include FilterTest
-
     class TestProcessor < Processor
       attr_reader :visited
       
@@ -27,10 +26,10 @@ module FDProcessor
       end
     end
 
-    def run_test(&blk)
+    def run_test(*args, &blk)
       pn = Pathname.new __FILE__
       rootdir = pn.parent.parent
-      fdp = TestProcessor.new rootdir
+      fdp = TestProcessor.new(rootdir, *args)
       blk.call pn, rootdir, fdp
     end
     
@@ -55,6 +54,12 @@ module FDProcessor
     def test_no_filters_not_included_file
       run_test do |pn, rootdir, fdp|
         refute_includes fdp.visited, Pathname.new('/tmp/foobar')
+      end
+    end
+    
+    def test_filters_include_file
+      run_test(BaseNameFilter.new('Rakefile')) do |pn, rootdir, fdp|
+        assert_includes fdp.visited, rootdir + 'Rakefile'
       end
     end
   end

@@ -11,7 +11,7 @@ module FDProcessor
       bnf = filtercls.new pattern
       pn = Pathname.new filename
       msg = "expect_match: #{expect_match}; filtercls: #{filtercls}; pattern: #{pattern}; filename: #{filename}"
-      assert_equal expect_match, !bnf.match?(pn).nil?, msg
+      assert_equal expect_match, !!bnf.match?(pn), msg
     end
   end
 
@@ -23,11 +23,11 @@ module FDProcessor
     end
 
     def test_match
-      assert_match true, 'foo', '/tmp/foo.txt'
+      assert_match true, 'foo.txt', '/tmp/foo.txt'
     end
 
     def test_nomatch_full
-      assert_match false, 'foo', '/tmp/bar.txt'
+      assert_match false, 'foo.txt', '/tmp/bar.txt'
     end
 
     def test_nomatch_start
@@ -35,7 +35,7 @@ module FDProcessor
     end
 
     def test_nomatch_end
-      assert_match false, 'foo', '/tmp/barfoo.txt'
+      assert_match false, 'foo.txt', '/tmp/barfoo.txt'
     end
 
     def test_match_regexp
@@ -59,31 +59,31 @@ module FDProcessor
     end
 
     def test_match
-      assert_match true, 'txt', '/tmp/foo.txt'
+      assert_match true, '.txt', '/tmp/foo.txt'
     end
 
     def test_nomatch_full
-      assert_match false, 'txt', '/tmp/foo.lst'
+      assert_match false, '.txt', '/tmp/foo.lst'
     end
 
     def test_nomatch_start
-      assert_match false, 'foo', '/tmp/foo.2txt'
+      assert_match false, '.txt', '/tmp/foo.2txt'
     end
 
     def test_nomatch_end
-      assert_match false, 'foo', '/tmp/foo.txt2'
+      assert_match false, '.txt', '/tmp/foo.txt2'
     end
 
     def test_match_regexp
-      assert_match true, %r{te?xt}, '/tmp/foo.txt'
+      assert_match true, %r{\.te?xt}, '/tmp/foo.txt'
     end
 
     def test_match_regexp_start
-      assert_match true, %r{te?xt}, '/tmp/foo.txt2'
+      assert_match true, %r{\.te?xt}, '/tmp/foo.txt2'
     end
 
     def test_nomatch_regexp
-      assert_match false, %r{te?xt}, '/tmp/bar.lst'
+      assert_match false, %r{\.te?xt}, '/tmp/bar.lst'
     end
   end
 end

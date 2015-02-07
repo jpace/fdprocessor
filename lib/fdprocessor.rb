@@ -47,16 +47,15 @@ module FDProcessor
 
     def process_directory dir
       dir.children.sort.each do |fd|
-        next if @filter && !@filter.match?(fd)
         process fd
       end
     end
 
     def process fd
-      return if @filter && !@filter.match?(fd)      
       if fd.directory?
         process_directory fd
       elsif fd.file?
+        return if @filter && !@filter.match?(fd)      
         process_file fd
       else
         process_unknown_type fd
