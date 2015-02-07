@@ -32,8 +32,11 @@ module FDProcessor
   end
 
   class Processor
-    def initialize args, filters = Array.new
-      @filters = filters
+    def initialize(*args)
+      @filter = nil
+      if args[-1].kind_of? Filter
+        @filter = args.pop
+      end
       args.each do |arg|
         process Pathname.new arg
       end
@@ -44,16 +47,13 @@ module FDProcessor
 
     def process_directory dir
       dir.children.sort.each do |fd|
-        next if @filters && @filters.include?(fd.basename.to_s)
+        next if @filter && !@filter.match?(fd)
         process fd
       end
     end
 
     def process fd
-      @filters.each do |filter| 
-        return nil unless filter.match? fd
-      end
-      
+      return if @filter && !@filter.match?(fd)      
       if fd.directory?
         process_directory fd
       elsif fd.file?
