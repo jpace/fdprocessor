@@ -26,33 +26,36 @@ module FDProcessor
         @visited << file
       end
     end
-    
-    def test_no_filters_include_file
+
+    def run_test(&blk)
       pn = Pathname.new __FILE__
       rootdir = pn.parent.parent
       fdp = TestProcessor.new rootdir
-      assert_includes fdp.visited, pn
+      blk.call pn, rootdir, fdp
+    end
+    
+    def test_no_filters_include_file
+      run_test do |pn, rootdir, fdp|
+        assert_includes fdp.visited, pn
+      end
     end
     
     def test_no_filters_include_dir
-      pn = Pathname.new __FILE__
-      rootdir = pn.parent.parent
-      fdp = TestProcessor.new rootdir
-      assert_includes fdp.visited, rootdir
+      run_test do |pn, rootdir, fdp|
+        assert_includes fdp.visited, rootdir
+      end
     end
     
     def test_no_filters_not_included_dir
-      pn = Pathname.new __FILE__
-      rootdir = pn.parent.parent
-      fdp = TestProcessor.new rootdir
-      refute_includes fdp.visited, Pathname.new('/tmp')
+      run_test do |pn, rootdir, fdp|
+        refute_includes fdp.visited, Pathname.new('/tmp')
+      end
     end
     
     def test_no_filters_not_included_file
-      pn = Pathname.new __FILE__
-      rootdir = pn.parent.parent
-      fdp = TestProcessor.new rootdir
-      refute_includes fdp.visited, Pathname.new('/tmp/foobar')
+      run_test do |pn, rootdir, fdp|
+        refute_includes fdp.visited, Pathname.new('/tmp/foobar')
+      end
     end
   end
 end
