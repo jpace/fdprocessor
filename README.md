@@ -13,7 +13,7 @@ Use in your code:
 ```
 require 'fdprocessor'
 
-# equivalent to "find -type f"
+# equivalent to "find -type f | sort"
 class FindFiles < FDProcessor
   def process_file file
     puts "file: #{file}"
@@ -27,9 +27,9 @@ FindFiles.new ARGV
 
 Directories and files are processed hierarchically, in sorted order. FDProcessor
 has two methods, `process_directory` and `process_file`, that do as their name
-suggests. By default, `process_file` is a no-op, and `process_directory(dir)` calls
-process on each file in `dir`. You can hook around `process_directory` as
-follows:
+suggests. By default, `process_file(file)` is a no-op, and
+`process_directory(dir)` calls process on each file in `dir`. You can hook
+around `process_directory` as follows:
 
 ```
   def process_directory dir
@@ -42,7 +42,8 @@ follows:
 Note that `super` must be called by process_directory if you want the subnodes
 to be processed.
 
-Conversely, if you want to filter, for example to skip the `.git` directory:
+Conversely, omit the call to `super` if you want to filter, for example to skip
+the `.git` directory:
 
 ```
   def process_directory dir

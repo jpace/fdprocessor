@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'fdprocessor/filter'
 require 'pathname'
 
@@ -15,7 +15,7 @@ module FDProcessor
     end
   end
 
-  class BaseNameFilterTestCase < Test::Unit::TestCase
+  class BaseNameFilterTestCase < Minitest::Test
     include FilterTest
     
     def assert_match expect_match, pattern, filename
@@ -51,7 +51,7 @@ module FDProcessor
     end
   end
 
-  class ExtFilterTestCase < Test::Unit::TestCase
+  class ExtFilterTestCase < Minitest::Test
     include FilterTest
 
     def assert_match expect_match, pattern, filename

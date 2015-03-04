@@ -4,39 +4,15 @@
 module FDProcessor
   VERSION = '1.0.0'
 
-  # File and directory processor, with filtering.
-  class FilterSet
-    def initialize args
-      @dirsonly = args[:dirsonly]
-      @filesonly = args[:filesonly]
-      @basename = args[:basename]
-      @dirname = args[:dirname]
-      @extname = args[:extname]
-    end
-
-    def match? fd
-      if @dirsonly && !fd.directory?
-        false
-      elsif @filesonly && !fd.file?
-        false
-      elsif @basename && @basename != fd.basename.to_s
-        false
-      elsif @dirname && @dirname != fd.parent.to_s
-        false
-      elsif @extname && @extname != fd.extname.to_s
-        false
-      else
-        true
-      end
-    end
-  end
-
+  # A base class for processing files and directories.
   class Processor
     def initialize(*args)
-      @filter = nil
       if args[-1].kind_of? Filter
         @filter = args.pop
+      else
+        @filter = nil
       end
+      
       args.each do |arg|
         process Pathname.new arg
       end
@@ -55,7 +31,7 @@ module FDProcessor
       if fd.directory?
         process_directory fd
       elsif fd.file?
-        return if @filter && !@filter.match?(fd)      
+        return if filtered? fd, @filter
         process_file fd
       else
         process_unknown_type fd
@@ -63,6 +39,11 @@ module FDProcessor
     end
 
     def process_unknown_type fd
+    end
+
+    private
+    def filtered? fd, filter
+      filter && !filter.match?(fd)
     end
   end
 end
