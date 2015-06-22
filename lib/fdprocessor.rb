@@ -1,12 +1,15 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
+require 'fdprocessor/filter'
+require 'pathname'
+
 module FDProcessor
   VERSION = '1.0.0'
 
   # A base class for processing files and directories.
   class Processor
-    def initialize(*args)
+    def initialize args
       if args[-1].kind_of? Filter
         @filter = args.pop
       else

@@ -36,7 +36,7 @@ module FDProcessor
     end
   end
 
-  # Matches against the extersion of the pathname. The pattern should include
+  # Matches against the extension of the pathname. The pattern should include
   # the dot.
   class ExtFilter < PatternFilter
     def match_element fd

@@ -16,7 +16,7 @@ require 'fdprocessor'
 # equivalent to "find -type f | sort"
 class FindFiles < FDProcessor
   def process_file file
-    puts "file: #{file}"
+    puts file
   end
 end
 
@@ -25,11 +25,10 @@ FindFiles.new ARGV
 
 ## Features
 
-Directories and files are processed hierarchically, in sorted order. FDProcessor
-has two methods, `process_directory` and `process_file`, that do as their name
-suggests. By default, `process_file(file)` is a no-op, and
-`process_directory(dir)` calls process on each file in `dir`. You can hook
-around `process_directory` as follows:
+Directories and files are processed hierarchically, in sorted order. FDProcessor has two methods,
+`process_directory` and `process_file`, that do as their names suggest. By default,
+`process_file(file)` is a no-op, and `process_directory(dir)` calls process on each file and
+directory in `dir`. You can hook around `process_directory` as follows:
 
 ```
   def process_directory dir
@@ -51,6 +50,24 @@ the `.git` directory:
       super
     end
   end
+```
+
+A simple program that counts the number of files in each directory:
+
+```
+class DirCounter < FDProcessor::Processor
+  def initialize args
+    @counts = Hash.new(0)
+    super
+    @counts.sort.each do |dir, count|
+      puts "#{dir}: #{count}"
+    end
+  end
+
+  def process_file file
+    @counts[file.parent] += 1
+  end
+end
 ```
 
 ## Author
