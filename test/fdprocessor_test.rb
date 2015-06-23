@@ -1,7 +1,6 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'minitest'
 require 'minitest/autorun'
 require 'fdprocessor'
 require 'fdprocessor/filter'

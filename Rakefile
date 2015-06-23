@@ -2,6 +2,7 @@ require 'rubygems'
 require 'fileutils'
 require 'rake/testtask'
 require 'rubygems/package_task'
+require 'minitest/autorun'
 require './lib/fdprocessor'
 
 task :default => :test
