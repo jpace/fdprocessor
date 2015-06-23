@@ -1,13 +1,13 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'fdprocessor'
 require 'fdprocessor/filter'
 require 'pathname'
 
 module FDProcessor
-  class FDProcessorTestCase < Test::Unit::TestCase
+  class FDProcessorTestCase < Minitest::Test
     class TestProcessor < Processor
       attr_reader :visited
       
