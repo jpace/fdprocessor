@@ -9,7 +9,8 @@ module FDProcessor
 
   # A base class for processing files and directories.
   class Processor
-    def initialize args
+    def initialize(*args)
+      args = args.flatten
       if args[-1].kind_of? Filter
         @filter = args.pop
       else

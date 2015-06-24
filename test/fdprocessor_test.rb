@@ -13,7 +13,7 @@ module FDProcessor
       
       def initialize(*args)
         @visited = Array.new
-        super
+        super(*args)
       end
 
       def process_directory dir

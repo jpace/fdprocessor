@@ -2,8 +2,8 @@ require 'rubygems'
 require 'fileutils'
 require 'rake/testtask'
 require 'rubygems/package_task'
-require 'minitest/autorun'
-require './lib/fdprocessor'
+require 'minitest'
+# require 'lib/fdprocessor'
 
 task :default => :test
 
@@ -17,10 +17,10 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = 'fdprocessor'
-  s.version = FDProcessor::VERSION
+  s.version = '1.0.0'
   s.author = 'Jeff Pace'
   s.email = 'jeugenepace@gmail.com'
-  s.homepage = 'http://jeugenepace.github.com/fdprocessor'
+  s.homepage = 'http://jpace.github.com/fdprocessor'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A gem for processing files and directories.'
   s.description = 'A gem containing base classes for common processing of files and directories, recursively.'
